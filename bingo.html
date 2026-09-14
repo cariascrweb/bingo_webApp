@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#092A21">
+<title>Bingo Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700&family=Archivo+Black&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --felt:#0E3B2E; --felt-deep:#092A21; --ivory:#F4EEE0; --chalk:#9DBBAE;
+    --brass:#D9A441; --line:#1E5443;
+    --b:#2E6FD9; --i:#C8402F; --n:#E8E2D4; --g:#2F9E5E; --o:#E0A21C;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:var(--felt-deep);color:var(--ivory);
+    font-family:Archivo,system-ui,-apple-system,sans-serif;font-weight:500}
+  body{padding:env(safe-area-inset-top) 14px calc(env(safe-area-inset-bottom) + 28px)}
+  .wrap{max-width:520px;margin:0 auto}
+
+  header{padding:16px 0 10px;display:flex;align-items:center;gap:16px}
+  .ball{width:108px;height:108px;flex:0 0 108px;border-radius:50%;
+    background:radial-gradient(circle at 34% 28%, #fff 0%, var(--n) 38%, #c9c2b2 100%);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    color:#14261F;box-shadow:0 10px 26px rgba(0,0,0,.45);transition:transform .18s}
+  .ball.pop{transform:scale(1.08)}
+  .ball .l{font-family:'Archivo Black',Archivo,sans-serif;font-size:18px;letter-spacing:.06em;line-height:1}
+  .ball .n{font-family:'Archivo Black',Archivo,sans-serif;font-size:48px;line-height:1;
+    font-variant-numeric:tabular-nums;margin-top:2px}
+  .ball.empty .n{font-size:28px;color:#5f6a63}
+  .meta{font-size:15px;color:var(--chalk);line-height:1.5}
+  .meta b{color:var(--ivory);font-size:25px;font-family:'Archivo Black',Archivo,sans-serif;
+    display:block;font-variant-numeric:tabular-nums}
+  .prev{margin-top:5px;font-variant-numeric:tabular-nums}
+
+  .entry{display:flex;gap:10px;margin:4px 0 14px}
+  input[type=tel]{background:var(--felt);border:2px solid var(--line);color:var(--ivory);
+    font:700 28px/1 'Archivo Black',Archivo,sans-serif;text-align:center;
+    padding:15px 8px;border-radius:14px;font-variant-numeric:tabular-nums;min-width:0}
+  .entry input{flex:1}
+  input[type=tel]:focus{outline:none;border-color:var(--brass)}
+  input::placeholder{color:#4d6b5f;font-size:16px;font-family:Archivo}
+  button{font:700 16px Archivo,sans-serif;border:0;border-radius:14px;padding:0 22px;
+    background:var(--brass);color:#231704}
+  button:active{transform:translateY(1px)}
+  .bar{display:flex;gap:10px;margin-bottom:16px}
+  .bar button{flex:1;padding:12px 0;background:transparent;color:var(--chalk);border:2px solid var(--line)}
+  .bar button:disabled{opacity:.35}
+
+  .tabs{display:flex;gap:6px;background:var(--felt);padding:5px;border-radius:15px;margin-bottom:16px}
+  .tabs button{flex:1;padding:11px 0;background:transparent;color:var(--chalk);font-size:15px}
+  .tabs button.sel{background:var(--felt-deep);color:var(--ivory);box-shadow:0 2px 8px rgba(0,0,0,.35)}
+  .pane{display:none} .pane.sel{display:block}
+
+  .board{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .head{font-family:'Archivo Black',Archivo,sans-serif;font-size:21px;text-align:center;padding:4px 0 8px}
+  .head.B{color:var(--b)} .head.I{color:var(--i)} .head.N{color:var(--n)}
+  .head.G{color:var(--g)} .head.O{color:var(--o)}
+  .col{display:grid;gap:6px}
+  .num{height:clamp(44px,16.5vw,78px);display:flex;align-items:center;justify-content:center;
+    border-radius:12px;background:var(--felt);color:#6f8d80;
+    font:700 clamp(16px,5.2vw,23px)/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;
+    border:1px solid #17493A;transition:background .15s,color .15s}
+  .num.on{color:#10231C;border-color:transparent}
+  .col.B .num.on{background:var(--b);color:#fff}
+  .col.I .num.on{background:var(--i);color:#fff}
+  .col.N .num.on{background:var(--n)}
+  .col.G .num.on{background:var(--g);color:#fff}
+  .col.O .num.on{background:var(--o)}
+  .num.last{box-shadow:0 0 0 3px var(--brass)}
+  .log{margin:20px 0 0;font-size:14px;color:var(--chalk);line-height:1.7;
+    font-variant-numeric:tabular-nums;word-spacing:.15em}
+  .log h2{font:700 13px Archivo,sans-serif;color:#6f8d80;margin:0 0 6px}
+
+  /* ---- my cards ---- */
+  .card{background:var(--felt);border-radius:18px;padding:12px;margin-bottom:16px}
+  .card h3{margin:2px 4px 10px;font:700 15px Archivo,sans-serif;color:var(--chalk);
+    display:flex;justify-content:space-between;align-items:center}
+  .card h3 span.state{color:var(--brass);font-family:'Archivo Black',Archivo,sans-serif;font-size:15px}
+  .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+  .grid .hd{font-family:'Archivo Black',Archivo,sans-serif;font-size:17px;text-align:center;padding-bottom:2px}
+  .grid .hd.B{color:var(--b)} .grid .hd.I{color:var(--i)} .grid .hd.N{color:var(--n)}
+  .grid .hd.G{color:var(--g)} .grid .hd.O{color:var(--o)}
+  .cell{width:100%;height:clamp(46px,15vw,64px);border-radius:10px;border:2px solid var(--line);
+    background:var(--felt-deep);color:var(--ivory);text-align:center;
+    font:700 clamp(17px,5vw,21px)/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;
+    padding:0;transition:background .15s,color .15s}
+  .cell:focus{outline:none;border-color:var(--brass)}
+  .cell.hit{background:var(--brass);color:#231704;border-color:transparent}
+  .cell.free{background:#17493A;color:var(--chalk);font-size:12px;font-weight:700}
+  .cell.bad{border-color:var(--i)}
+  .cell.inline{box-shadow:inset 0 0 0 2px #fff}
+  .cardbar{display:flex;gap:8px;margin-top:10px}
+  .cardbar button{flex:1;padding:11px 0;background:transparent;color:var(--chalk);
+    border:2px solid var(--line);font-size:14px}
+  .cardbar button.go{background:var(--brass);color:#231704;border-color:transparent}
+  .hint{font-size:13px;color:#6f8d80;margin:8px 4px 0;line-height:1.5}
+
+  /* ---- toasts ---- */
+  .toasts{position:fixed;top:calc(env(safe-area-inset-top) + 10px);left:50%;transform:translateX(-50%);
+    z-index:999;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;
+    width:100%;padding:0 14px}
+  .toast{background:var(--brass);color:#231704;font:700 14px Archivo,sans-serif;padding:10px 16px;
+    border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,.4);opacity:0;transform:translateY(-10px);
+    transition:opacity .25s,transform .25s;max-width:400px;text-align:center}
+  .toast.show{opacity:1;transform:translateY(0)}
+
+  .cardsbar{display:flex;justify-content:flex-end;margin-bottom:10px}
+  .cardsbar button{padding:9px 18px;font-size:14px}
+
+  /* ---- goals ---- */
+  .quickgoals{display:flex;gap:8px;margin:2px 0 14px}
+  .quickgoals button{flex:1;padding:10px 0;background:transparent;color:var(--chalk);
+    border:2px solid var(--line);font-size:13px}
+  .goalsave{display:flex;gap:8px;margin:14px 0}
+  .goalsave input{flex:1;background:var(--felt);border:2px solid var(--line);color:var(--ivory);
+    font:700 15px Archivo,sans-serif;padding:12px;border-radius:12px;min-width:0}
+  .goalsave input:focus{outline:none;border-color:var(--brass)}
+  .goalrow{display:flex;justify-content:space-between;align-items:center;background:var(--felt);
+    border-radius:12px;padding:10px 14px;margin-bottom:8px;font-size:14px;gap:10px}
+  .goalrow button{padding:7px 14px;font-size:13px;background:transparent;color:var(--i);border:2px solid var(--line)}
+  .cell.dummy{cursor:pointer;background:var(--felt-deep);border:2px solid var(--line)}
+  .cell.dummy.on{background:var(--brass);border-color:transparent}
+
+  .langbar{display:flex;justify-content:flex-end;gap:6px;margin:8px 0 0}
+  .langbar button{padding:6px 14px;font-size:13px;background:transparent;color:var(--chalk);
+    border:2px solid var(--line);border-radius:10px}
+  .langbar button.sel{background:var(--brass);color:#231704;border-color:transparent}
+
+  .sessionbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px;
+    margin-top:8px;font-size:12px;color:var(--chalk)}
+  .sessionbar b{color:var(--ivory);font-family:'Archivo Black',Archivo,sans-serif;letter-spacing:.03em}
+  .sessionbtns{display:flex;gap:6px}
+  .sessionbtns button{padding:6px 12px;font-size:12px;background:transparent;color:var(--chalk);
+    border:2px solid var(--line);border-radius:10px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="langbar">
+    <button type="button" data-lang="en" class="sel">EN</button>
+    <button type="button" data-lang="es">ES</button>
+  </div>
+  <div class="sessionbar">
+    <span class="sidlabel" hidden><span data-i18n="sessionLabel">Session</span>: <b id="sidValue"></b></span>
+    <span class="sessionbtns">
+      <button type="button" id="copyLink" data-i18n="copyLink">Copy link</button>
+      <button type="button" id="newSession" data-i18n="newSession">New session</button>
+    </span>
+  </div>
+  <header>
+    <div class="ball empty" id="ball"><div class="l" id="ballL"></div><div class="n" id="ballN">–</div></div>
+    <div class="meta">
+      <b id="count">0</b>
+      <span data-i18n="calledWord">called</span> · <span id="left">75</span> <span data-i18n="leftWord">left</span>
+      <div class="prev" id="prev">Nothing called yet</div>
+    </div>
+  </header>
+
+  <div class="entry">
+    <input id="in" type="tel" inputmode="numeric" maxlength="2" placeholder="Number called 1–75" data-i18n-ph="callPh" autocomplete="off">
+    <button id="add" data-i18n="call">Call</button>
+  </div>
+
+  <div class="bar">
+    <button id="undo" disabled data-i18n="undo">Undo last</button>
+    <button id="reset" data-i18n="newGame">Start new game</button>
+  </div>
+
+  <div class="tabs">
+    <button data-pane="cards" class="sel" data-i18n="tabCards">My cards</button>
+    <button data-pane="goals" data-i18n="tabGoals">Goals</button>
+    <button data-pane="all" data-i18n="tabAll">All 75</button>
+  </div>
+
+  <div class="pane sel" id="pane-cards">
+    <div class="cardsbar"><button id="addCard" type="button" data-i18n="addCard">+ Add card</button></div>
+    <div id="cards"></div>
+    <p class="hint" data-i18n="cardsHint">Tap a square to type your card number. Each column only accepts its own range (B 1–15, I 16–30, N 31–45, G 46–60, O 61–75) — invalid or repeated numbers are rejected. The centre is a free space. Squares fill in on their own as numbers are called.</p>
+  </div>
+
+  <div class="pane" id="pane-goals">
+    <p class="hint" data-i18n="goalsHint">Mark cells on the blank card below to define a winning pattern (e.g. the four corners), then save it as a goal. You can save more than one — you'll get an alert the moment any of your cards completes a saved pattern.</p>
+    <div class="quickgoals">
+      <button id="presetCorners" type="button" data-i18n="presetCorners">Four corners</button>
+      <button id="presetX" type="button" data-i18n="presetX">Letter X</button>
+      <button id="presetBlackout" type="button" data-i18n="presetBlackout">Blackout</button>
+    </div>
+    <div class="grid" id="dummyGrid"></div>
+    <div class="goalsave">
+      <input id="goalName" type="text" placeholder="Goal name (optional)" data-i18n-ph="goalNamePh" maxlength="24">
+      <button id="saveGoal" type="button" data-i18n="saveGoal">Save goal</button>
+    </div>
+    <div id="goalsListBox"></div>
+  </div>
+
+  <div class="pane" id="pane-all">
+    <div class="board" id="board"></div>
+    <div class="log">
+      <h2 data-i18n="inOrder">In the order called</h2>
+      <div id="hist">—</div>
+    </div>
+  </div>
+</div>
+<div class="toasts" id="toasts"></div>
+
+<script>
+const LETTERS=['B','I','N','G','O'];
+const letterOf=n=>LETTERS[Math.floor((n-1)/15)];
+let called=[];
+let cards=[Array(25).fill(''),Array(25).fill(''),Array(25).fill('')]; // dynamic, row-major, index 12 = free
+let goalsList=[]; // {id,name,cells:[25 bool]} saved winning patterns
+let goalDummy=Array(25).fill(false); goalDummy[12]=true;
+let achieved={}; // key "cardIndex:goalId" -> already alerted
+let silent=false; // suppress toasts while restoring a saved game
+const isSet=n=>called.includes(n);
+const $=id=>document.getElementById(id);
+const colRange=idx=>{const col=idx%5; return [col*15+1,col*15+15];};
+
+/* ---------- session id (per-tab session, persisted indefinitely per session) ---------- */
+function genSessionId(){
+  if(window.crypto&&crypto.randomUUID) return crypto.randomUUID().replace(/-/g,'').slice(0,10);
+  return Math.random().toString(36).slice(2,8)+Math.random().toString(36).slice(2,6);
+}
+function resolveSessionId(){
+  let sid=null;
+  try{
+    const url=new URL(location.href);
+    const fromUrl=url.searchParams.get('s');
+    if(fromUrl&&/^[a-zA-Z0-9]{4,32}$/.test(fromUrl)) sid=fromUrl;
+  }catch(e){}
+  if(!sid){ try{ sid=sessionStorage.getItem('bingo:sid'); }catch(e){} }
+  if(!sid) sid=genSessionId();
+  try{ sessionStorage.setItem('bingo:sid',sid); }catch(e){}
+  try{
+    const url=new URL(location.href);
+    if(url.searchParams.get('s')!==sid){ url.searchParams.set('s',sid); history.replaceState(null,'',url); }
+  }catch(e){}
+  return sid;
+}
+const SID=resolveSessionId();
+const STORE_KEY='bingo:v4:'+SID;
+
+/* ---------- language ---------- */
+let LANG='en';
+const STR={
+  en:{
+    title:'Bingo Tracker',
+    calledWord:'called', leftWord:'left',
+    nothingCalled:'Nothing called yet',
+    firstCall:'First call of the game',
+    beforeThat:(x)=>'Before that: '+x,
+    callPh:'Number called 1–75',
+    call:'Call',
+    undo:'Undo last',
+    newGame:'Start new game',
+    tabCards:'My cards', tabGoals:'Goals', tabAll:'All 75',
+    addCard:'+ Add card',
+    cardsHint:'Tap a square to type your card number. Each column only accepts its own range (B 1–15, I 16–30, N 31–45, G 46–60, O 61–75) — invalid or repeated numbers are rejected. The centre is a free space. Squares fill in on their own as numbers are called.',
+    card:(n)=>'Card '+n,
+    clear:'Clear', removeCard:'Remove card', free:'FREE',
+    entered:(f)=>f+'/24 entered',
+    bingo:(x)=>'BINGO'+x+'!',
+    oneAway:'1 away',
+    bestLine:(b)=>b+' of 5 on the best line',
+    needsRange:(letter,lo,hi)=>letter+' needs '+lo+'-'+hi,
+    already:'Already on this card',
+    goalsHint:"Mark cells on the blank card below to define a winning pattern (e.g. the four corners), then save it as a goal. You can save more than one — you'll get an alert the moment any of your cards completes a saved pattern.",
+    presetCorners:'Four corners', presetX:'Letter X', presetBlackout:'Blackout',
+    goalNamePh:'Goal name (optional)', saveGoal:'Save goal',
+    noGoals:'No goals set yet. Mark cells above (e.g. the four corners) and save.',
+    goalCell:(c)=>c+' cell'+(c===1?'':'s'),
+    remove:'Remove',
+    markAtLeastOne:'Mark at least one cell to save a goal.',
+    goalDefaultName:(n)=>'Goal '+n,
+    goalCompleted:(card,name)=>'Card '+card+' completed "'+name+'"!',
+    inOrder:'In the order called',
+    onlyRange:'1 to 75 only',
+    alreadyCalled:(x)=>x+' was already called',
+    confirmClearCard:(n)=>'Clear every number on card '+n+'?',
+    confirmRemoveCard:(n)=>'Remove card '+n+'?',
+    atLeastOneCard:'At least one card is required.',
+    confirmClearAll:(n)=>'Clear all '+n+' called numbers? Your cards stay as they are.',
+    sessionLabel:'Session',
+    copyLink:'Copy link',
+    newSession:'New session',
+    linkCopied:'Session link copied!',
+    copyLinkPrompt:'Copy this link to come back to this session:',
+    confirmNewSession:'Start a brand-new empty session in this tab? (Your current session stays saved if you keep its link.)'
+  },
+  es:{
+    title:'Registro de Bingo',
+    calledWord:'cantados', leftWord:'quedan',
+    nothingCalled:'Todavía no se ha cantado ningún número',
+    firstCall:'Primer número de la partida',
+    beforeThat:(x)=>'Antes: '+x,
+    callPh:'Número cantado 1–75',
+    call:'Cantar',
+    undo:'Deshacer último',
+    newGame:'Empezar partida nueva',
+    tabCards:'Mis cartones', tabGoals:'Objetivos', tabAll:'Los 75',
+    addCard:'+ Añadir cartón',
+    cardsHint:'Toca una casilla para escribir el número de tu cartón. Cada columna solo acepta su propio rango (B 1–15, I 16–30, N 31–45, G 46–60, O 61–75) — los números inválidos o repetidos se rechazan. El centro es un espacio libre. Las casillas se marcan solas a medida que se cantan los números.',
+    card:(n)=>'Cartón '+n,
+    clear:'Borrar', removeCard:'Quitar cartón', free:'LIBRE',
+    entered:(f)=>f+'/24 introducidos',
+    bingo:(x)=>'¡BINGO'+x+'!',
+    oneAway:'A 1 de completar',
+    bestLine:(b)=>b+' de 5 en la mejor línea',
+    needsRange:(letter,lo,hi)=>letter+' necesita '+lo+'-'+hi,
+    already:'Ya está en este cartón',
+    goalsHint:'Marca casillas en el cartón en blanco de abajo para definir un patrón ganador (por ejemplo, las cuatro esquinas) y guárdalo como objetivo. Puedes guardar más de uno: recibirás un aviso en cuanto alguno de tus cartones complete un patrón guardado.',
+    presetCorners:'Cuatro esquinas', presetX:'Letra X', presetBlackout:'Cartón lleno',
+    goalNamePh:'Nombre del objetivo (opcional)', saveGoal:'Guardar objetivo',
+    noGoals:'Todavía no hay objetivos. Marca casillas arriba (por ejemplo, las cuatro esquinas) y guarda.',
+    goalCell:(c)=>c+' casilla'+(c===1?'':'s'),
+    remove:'Quitar',
+    markAtLeastOne:'Marca al menos una casilla para guardar un objetivo.',
+    goalDefaultName:(n)=>'Objetivo '+n,
+    goalCompleted:(card,name)=>'¡El cartón '+card+' completó "'+name+'"!',
+    inOrder:'En el orden en que se cantaron',
+    onlyRange:'Solo del 1 al 75',
+    alreadyCalled:(x)=>x+' ya se había cantado',
+    confirmClearCard:(n)=>'¿Borrar todos los números del cartón '+n+'?',
+    confirmRemoveCard:(n)=>'¿Quitar el cartón '+n+'?',
+    atLeastOneCard:'Se necesita al menos un cartón.',
+    confirmClearAll:(n)=>'¿Borrar los '+n+' números cantados? Tus cartones se mantienen igual.',
+    sessionLabel:'Sesión',
+    copyLink:'Copiar enlace',
+    newSession:'Nueva sesión',
+    linkCopied:'¡Enlace de la sesión copiado!',
+    copyLinkPrompt:'Copia este enlace para volver a esta sesión:',
+    confirmNewSession:'¿Empezar una sesión nueva y vacía en esta pestaña? (Tu sesión actual se conserva si guardas su enlace.)'
+  }
+};
+function t(key,...args){
+  const entry=(STR[LANG]||STR.en)[key];
+  if(typeof entry==='function') return entry(...args);
+  return entry!==undefined?entry:key;
+}
+function applyStaticI18n(){
+  document.title=t('title');
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent=t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{ el.placeholder=t(el.dataset.i18nPh); });
+}
+function setLang(l){
+  if(!STR[l]) return;
+  LANG=l;
+  document.documentElement.lang=l;
+  document.querySelectorAll('.langbar button').forEach(b=>b.classList.toggle('sel',b.dataset.lang===l));
+  applyStaticI18n();
+  buildCards(); buildDummy(); renderGoalsList();
+  render(false);
+  save();
+}
+
+/* ---------- toasts ---------- */
+function toast(msg){
+  if(silent) return;
+  const box=$('toasts'); if(!box) return;
+  const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
+  box.appendChild(t);
+  requestAnimationFrame(()=>t.classList.add('show'));
+  setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(),300); },3600);
+}
+
+/* ---------- storage ---------- */
+async function save(){
+  const v=JSON.stringify({called,cards,goalsList,lang:LANG});
+  try{ localStorage.setItem(STORE_KEY,v); }catch(e){}
+}
+async function load(){
+  let raw=null;
+  try{ raw=localStorage.getItem(STORE_KEY); }catch(e){}
+  if(raw===null){
+    // one-time migration: adopt the old single shared save (pre-multi-session) into this session, then retire it
+    try{
+      const legacy=localStorage.getItem('bingo:v3')||localStorage.getItem('bingo:v2');
+      if(legacy){
+        raw=legacy;
+        localStorage.removeItem('bingo:v3');
+        localStorage.removeItem('bingo:v2');
+      }
+    }catch(e){}
+  }
+  if(!raw) return;
+  try{
+    const d=JSON.parse(raw);
+    if(Array.isArray(d.called)) called=d.called.filter(n=>n>=1&&n<=75);
+    if(Array.isArray(d.cards)&&d.cards.length) cards=d.cards.map(c=>{
+      const a=Array(25).fill(''); (c||[]).forEach((v,i)=>{ if(i<25) a[i]=v; }); return a;
+    });
+    if(Array.isArray(d.goalsList)) goalsList=d.goalsList.filter(g=>g&&Array.isArray(g.cells));
+    if(typeof d.lang==='string'&&STR[d.lang]) LANG=d.lang;
+  }catch(e){}
+}
+
+/* ---------- caller board ---------- */
+const board=$('board');
+LETTERS.forEach(L=>{const h=document.createElement('div');h.className='head '+L;h.textContent=L;board.appendChild(h);});
+LETTERS.forEach((L,c)=>{
+  const col=document.createElement('div'); col.className='col '+L;
+  for(let i=1;i<=15;i++){
+    const n=c*15+i,d=document.createElement('div');
+    d.className='num'; d.id='n'+n; d.textContent=n;
+    d.onclick=()=>toggle(n);
+    col.appendChild(d);
+  }
+  board.appendChild(col);
+});
+
+/* ---------- my cards (dynamic count) ---------- */
+const cardsBox=$('cards');
+function buildCards(){
+  cardsBox.innerHTML='';
+  cards.forEach((_,ci)=>{
+    const wrap=document.createElement('div'); wrap.className='card';
+    wrap.innerHTML='<h3>'+t('card',ci+1)+' <span class="state" id="st'+ci+'"></span></h3>';
+    const g=document.createElement('div'); g.className='grid';
+    LETTERS.forEach(L=>{const h=document.createElement('div');h.className='hd '+L;h.textContent=L;g.appendChild(h);});
+    for(let r=0;r<5;r++) for(let c=0;c<5;c++){
+      const idx=r*5+c;
+      if(idx===12){
+        const f=document.createElement('div'); f.className='cell free';
+        f.style.display='flex'; f.style.alignItems='center'; f.style.justifyContent='center';
+        f.textContent=t('free'); g.appendChild(f); continue;
+      }
+      const [lo,hi]=colRange(idx);
+      const inp=document.createElement('input');
+      inp.type='tel'; inp.inputMode='numeric'; inp.maxLength=2; inp.className='cell';
+      inp.id='c'+ci+'_'+idx; inp.dataset.card=ci; inp.dataset.idx=idx;
+      inp.placeholder=lo+'-'+hi;
+      inp.addEventListener('input',e=>onCellInput(e,ci,idx));
+      inp.addEventListener('blur',e=>onCellBlur(e,ci,idx));
+      g.appendChild(inp);
+    }
+    wrap.appendChild(g);
+    const bar=document.createElement('div'); bar.className='cardbar';
+    bar.innerHTML='<button data-clear="'+ci+'">'+t('clear')+'</button><button data-remove="'+ci+'">'+t('removeCard')+'</button>';
+    wrap.appendChild(bar);
+    cardsBox.appendChild(wrap);
+  });
+  syncInputs();
+}
+function onCellInput(e,ci,idx){
+  e.target.value=e.target.value.replace(/\D/g,'').slice(0,2);
+  cards[ci][idx]=e.target.value;
+  if(e.target.value.length===2) commitCell(e.target,ci,idx,false);
+  renderCards(); save();
+}
+function onCellBlur(e,ci,idx){
+  if(e.target.value.length) commitCell(e.target,ci,idx,true);
+}
+function commitCell(el,ci,idx,isBlur){
+  const val=cards[ci][idx];
+  if(val==='') return;
+  const v=parseInt(val,10);
+  const [lo,hi]=colRange(idx);
+  const dup=cards[ci].some((x,i)=>i!==idx&&i!==12&&x!==''&&parseInt(x,10)===v);
+  if(v<lo||v>hi||dup){
+    cards[ci][idx]=''; el.value='';
+    flashError(el,dup?t('already'):t('needsRange',LETTERS[idx%5],lo,hi));
+    renderCards(); save();
+    return;
+  }
+  if(!isBlur) focusNext(ci,idx);
+}
+function flashError(el,msg){
+  el.classList.add('bad');
+  const prevPh=el.placeholder;
+  el.placeholder=msg;
+  setTimeout(()=>{ el.classList.remove('bad'); el.placeholder=prevPh; },1500);
+}
+cardsBox.addEventListener('click',e=>{
+  const clearIdx=e.target.dataset&&e.target.dataset.clear;
+  const removeIdx=e.target.dataset&&e.target.dataset.remove;
+  if(clearIdx!==undefined&&clearIdx!==null){
+    if(confirm(t('confirmClearCard',+clearIdx+1))){
+      cards[+clearIdx]=Array(25).fill(''); buildCards(); renderCards(); save();
+    }
+    return;
+  }
+  if(removeIdx!==undefined&&removeIdx!==null){
+    if(cards.length<=1){ toast(t('atLeastOneCard')); return; }
+    if(confirm(t('confirmRemoveCard',+removeIdx+1))){
+      cards.splice(+removeIdx,1); achieved={}; buildCards(); renderCards(); save();
+    }
+  }
+});
+$('addCard').onclick=()=>{
+  cards.push(Array(25).fill(''));
+  buildCards(); renderCards(); save();
+};
+function focusNext(ci,idx){
+  for(let i=idx+1;i<25;i++){ const el=$('c'+ci+'_'+i); if(el){el.focus();el.select();return;} }
+}
+function syncInputs(){
+  cards.forEach((card,ci)=>card.forEach((v,idx)=>{
+    const el=$('c'+ci+'_'+idx); if(el) el.value=v||'';
+  }));
+}
+
+const LINES=(()=>{
+  const L=[];
+  for(let r=0;r<5;r++) L.push([0,1,2,3,4].map(c=>r*5+c));
+  for(let c=0;c<5;c++) L.push([0,1,2,3,4].map(r=>r*5+c));
+  L.push([0,6,12,18,24]); L.push([4,8,12,16,20]);
+  return L;
+})();
+
+function renderCards(){
+  cards.forEach((card,ci)=>{
+    const marked=[];
+    for(let idx=0;idx<25;idx++){
+      if(idx===12){ marked[idx]=true; continue; }
+      const el=$('c'+ci+'_'+idx); if(!el) continue;
+      const v=parseInt(card[idx],10);
+      const hit=card[idx]!==''&&isSet(v);
+      marked[idx]=hit;
+      el.classList.toggle('hit',hit);
+      el.classList.remove('inline');
+    }
+    let lines=0, best=0;
+    LINES.forEach(line=>{
+      const hits=line.filter(i=>marked[i]).length;
+      if(hits===5){ lines++; line.forEach(i=>{const el=$('c'+ci+'_'+i); if(el) el.classList.add('inline');}); }
+      if(hits>best) best=hits;
+    });
+    const filled=card.filter((v,i)=>i!==12&&v!=='').length;
+    const st=$('st'+ci);
+    if(st){
+      if(lines>0) st.textContent=t('bingo',lines>1?' ×'+lines:'');
+      else if(filled<24) st.textContent=t('entered',filled);
+      else st.textContent=best===4?t('oneAway'):t('bestLine',best);
+    }
+    checkGoals(ci,marked);
+  });
+}
+function checkGoals(ci,marked){
+  goalsList.forEach(goal=>{
+    const key=ci+':'+goal.id;
+    const done=goal.cells.every((need,i)=>!need||marked[i]);
+    if(done&&!achieved[key]){
+      achieved[key]=true;
+      toast(t('goalCompleted',ci+1,goal.name));
+    }else if(!done&&achieved[key]){
+      achieved[key]=false;
+    }
+  });
+}
+
+/* ---------- goal pattern editor (dummy card) ---------- */
+const dummyBox=$('dummyGrid');
+function buildDummy(){
+  dummyBox.innerHTML='';
+  LETTERS.forEach(L=>{const h=document.createElement('div');h.className='hd '+L;h.textContent=L;dummyBox.appendChild(h);});
+  for(let r=0;r<5;r++) for(let c=0;c<5;c++){
+    const idx=r*5+c;
+    const cell=document.createElement('div');
+    if(idx===12){
+      cell.className='cell free';
+      cell.style.display='flex'; cell.style.alignItems='center'; cell.style.justifyContent='center';
+      cell.textContent=t('free');
+    }else{
+      cell.className='cell dummy';
+      cell.addEventListener('click',()=>{
+        goalDummy[idx]=!goalDummy[idx];
+        cell.classList.toggle('on',goalDummy[idx]);
+      });
+    }
+    dummyBox.appendChild(cell);
+  }
+}
+function refreshDummyClasses(){
+  dummyBox.querySelectorAll('.cell.dummy').forEach(c=>{
+    const idx=Array.prototype.indexOf.call(dummyBox.querySelectorAll('.cell'),c);
+    c.classList.toggle('on',!!goalDummy[idx]);
+  });
+}
+function resetDummy(){
+  goalDummy=Array(25).fill(false); goalDummy[12]=true;
+  refreshDummyClasses();
+}
+$('presetCorners').onclick=()=>applyPreset([0,4,20,24]);
+$('presetX').onclick=()=>applyPreset([0,4,6,8,12,16,18,20,24]);
+$('presetBlackout').onclick=()=>applyPreset(Array.from({length:25},(_,i)=>i).filter(i=>i!==12));
+function applyPreset(idxs){
+  goalDummy=Array(25).fill(false); goalDummy[12]=true;
+  idxs.forEach(i=>{ if(i!==12) goalDummy[i]=true; });
+  refreshDummyClasses();
+}
+$('saveGoal').onclick=()=>{
+  const count=goalDummy.filter((v,i)=>v&&i!==12).length;
+  if(count===0){ toast(t('markAtLeastOne')); return; }
+  const name=($('goalName').value||'').trim()||t('goalDefaultName',goalsList.length+1);
+  goalsList.push({id:Date.now()+'_'+Math.random().toString(36).slice(2,6),name,cells:goalDummy.slice()});
+  $('goalName').value='';
+  resetDummy();
+  renderGoalsList(); renderCards(); save();
+};
+function renderGoalsList(){
+  const box=$('goalsListBox');
+  box.innerHTML='';
+  if(!goalsList.length){ box.innerHTML='<p class="hint">'+t('noGoals')+'</p>'; return; }
+  goalsList.forEach(goal=>{
+    const count=goal.cells.filter((v,i)=>v&&i!==12).length;
+    const row=document.createElement('div'); row.className='goalrow';
+    row.innerHTML='<span>'+goal.name+' ('+t('goalCell',count)+')</span><button data-goal="'+goal.id+'">'+t('remove')+'</button>';
+    box.appendChild(row);
+  });
+}
+$('goalsListBox').addEventListener('click',e=>{
+  const id=e.target.dataset&&e.target.dataset.goal;
+  if(!id) return;
+  goalsList=goalsList.filter(g=>String(g.id)!==String(id));
+  Object.keys(achieved).forEach(k=>{ if(k.endsWith(':'+id)) delete achieved[k]; });
+  renderGoalsList(); renderCards(); save();
+});
+
+/* ---------- calling ---------- */
+function render(pop){
+  for(let n=1;n<=75;n++){
+    const el=$('n'+n);
+    el.classList.toggle('on',isSet(n));
+    el.classList.remove('last');
+  }
+  $('count').textContent=called.length;
+  $('left').textContent=75-called.length;
+  const last=called[called.length-1], ball=$('ball');
+  if(last){
+    $('n'+last).classList.add('last');
+    ball.classList.remove('empty');
+    $('ballL').textContent=letterOf(last); $('ballN').textContent=last;
+    if(pop){ ball.classList.add('pop'); setTimeout(()=>ball.classList.remove('pop'),180); }
+  }else{ ball.classList.add('empty'); $('ballL').textContent=''; $('ballN').textContent='–'; }
+  const p=called[called.length-2];
+  $('prev').textContent=p?t('beforeThat',letterOf(p)+'-'+p):(last?t('firstCall'):t('nothingCalled'));
+  $('hist').textContent=called.length?called.map(n=>letterOf(n)+'-'+n).join('   '):'—';
+  $('undo').disabled=!called.length;
+  renderCards(); save();
+}
+function toggle(n){
+  const i=called.indexOf(n);
+  if(i>=0) called.splice(i,1); else called.push(n);
+  render(i<0);
+}
+function submit(){
+  const box=$('in'), v=parseInt(box.value,10);
+  if(!(v>=1&&v<=75)){ box.value=''; box.placeholder=t('onlyRange'); box.focus(); return; }
+  if(isSet(v)){ box.value=''; box.placeholder=t('alreadyCalled',letterOf(v)+'-'+v); box.focus(); return; }
+  called.push(v); box.value=''; box.placeholder=t('callPh'); render(true); box.focus();
+}
+$('add').onclick=submit;
+$('in').addEventListener('keydown',e=>{ if(e.key==='Enter') submit(); });
+$('in').addEventListener('input',e=>{ e.target.value=e.target.value.replace(/\D/g,''); });
+$('undo').onclick=()=>{ called.pop(); render(false); };
+$('reset').onclick=()=>{
+  if(!called.length||confirm(t('confirmClearAll',called.length))){
+    called=[]; render(false);
+  }
+};
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('sel'));
+  document.querySelectorAll('.pane').forEach(x=>x.classList.remove('sel'));
+  b.classList.add('sel'); $('pane-'+b.dataset.pane).classList.add('sel');
+});
+document.querySelectorAll('.langbar button').forEach(b=>b.onclick=()=>setLang(b.dataset.lang));
+$('sidValue').textContent=SID;
+$('copyLink').onclick=async ()=>{
+  const link=location.href;
+  try{
+    await navigator.clipboard.writeText(link);
+    toast(t('linkCopied'));
+  }catch(e){
+    window.prompt(t('copyLinkPrompt'),link);
+  }
+};
+$('newSession').onclick=()=>{
+  if(!confirm(t('confirmNewSession'))) return;
+  try{ sessionStorage.removeItem('bingo:sid'); }catch(e){}
+  const url=new URL(location.href);
+  url.searchParams.delete('s');
+  location.href=url.toString();
+};
+
+buildCards();
+buildDummy();
+renderGoalsList();
+load().then(()=>{
+  document.documentElement.lang=LANG;
+  document.querySelectorAll('.langbar button').forEach(b=>b.classList.toggle('sel',b.dataset.lang===LANG));
+  applyStaticI18n();
+  buildCards();
+  buildDummy();
+  renderGoalsList();
+  silent=true; render(false); silent=false;
+});
+</script>
+</body>
+</html>
