@@ -59,6 +59,50 @@ keyed per tab/session), multiple people can use the same public URL at the
 same time without a login and without their data mixing — each tab/device
 keeps its own private session automatically.
 
+## Counting sessions from the server access log
+
+The app stays a single static file — there's no beacon, no backend, and no
+IP tracking built into the page. Every session still gets a random id that's
+kept in the URL as `?s=<id>`, and the app forces one real page load with that
+`?s=` id the very first time a visitor arrives (not just a client-side
+`history.replaceState`), so the id always shows up in your web server's
+normal access log — including first-time visitors, not just reloads.
+
+That means you can count distinct sessions with the access log you already
+have, with no extra instrumentation:
+
+```bash
+# Total distinct sessions ever seen
+grep -oP 'GET /bingo\.html\?s=\K[a-zA-Z0-9]+' /var/log/apache2/bingo-access.log \
+  | sort -u | wc -l
+
+# Distinct sessions per day (Apache "combined" log format)
+awk -F'"' '
+  $2 ~ /GET \/bingo\.html\?s=/ {
+    match($1, /\[[0-9]{2}\/[A-Za-z]{3}\/[0-9]{4}/); day = substr($1, RSTART+1, RLENGTH-1);
+    match($2, /s=[a-zA-Z0-9]+/); sid = substr($2, RSTART+2, RLENGTH-2);
+    print day, sid;
+  }' /var/log/apache2/bingo-access.log | sort -u | cut -d' ' -f1 | uniq -c
+```
+
+(Adjust the log path and field numbers if your `LogFormat` differs from the
+Apache `combined` default.)
+
+Notes:
+
+- This only counts *sessions* (i.e., games started/resumed), not IP
+  addresses — nothing in the app or these commands looks at the visitor's
+  IP. Apache logs the client IP anyway as part of normal operation (and you
+  can make it the real visitor IP behind Cloudflare Tunnel with
+  `mod_remoteip` + `RemoteIPHeader CF-Connecting-IP`), but that's independent
+  of, and not required for, session counting.
+- Because the page never makes any further network requests after it loads
+  (all card/goal/call interactions are pure client-side JS), the access log
+  can tell you *how many* sessions happened and *when* they started, but not
+  how long someone actually spent playing. Getting real dwell/interaction
+  time would require adding a small JS beacon and a backend endpoint, which
+  this project intentionally does not have.
+
 ## Project files
 
 - `bingo.html` — the entire application (markup, styles and script).

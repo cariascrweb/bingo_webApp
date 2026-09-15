@@ -227,18 +227,28 @@ function genSessionId(){
   return Math.random().toString(36).slice(2,8)+Math.random().toString(36).slice(2,6);
 }
 function resolveSessionId(){
-  let sid=null;
+  let sid=null, isNew=false;
   try{
     const url=new URL(location.href);
     const fromUrl=url.searchParams.get('s');
     if(fromUrl&&/^[a-zA-Z0-9]{4,32}$/.test(fromUrl)) sid=fromUrl;
   }catch(e){}
   if(!sid){ try{ sid=sessionStorage.getItem('bingo:sid'); }catch(e){} }
-  if(!sid) sid=genSessionId();
+  if(!sid){ sid=genSessionId(); isNew=true; }
   try{ sessionStorage.setItem('bingo:sid',sid); }catch(e){}
   try{
     const url=new URL(location.href);
-    if(url.searchParams.get('s')!==sid){ url.searchParams.set('s',sid); history.replaceState(null,'',url); }
+    if(url.searchParams.get('s')!==sid){
+      url.searchParams.set('s',sid);
+      if(isNew){
+        // Brand-new session: do a real navigation (not just replaceState) so this
+        // session id lands in the server's normal access log too, letting you count
+        // distinct sessions later with plain log tools — no extra tracking code needed.
+        location.replace(url);
+      }else{
+        history.replaceState(null,'',url);
+      }
+    }
   }catch(e){}
   return sid;
 }
