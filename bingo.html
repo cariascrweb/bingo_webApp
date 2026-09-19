@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -145,13 +145,13 @@
 <body>
 <div class="wrap">
   <div class="langbar">
-    <button type="button" data-lang="en" class="sel">EN</button>
-    <button type="button" data-lang="es">ES</button>
+    <button type="button" data-lang="en">EN</button>
+    <button type="button" data-lang="es" class="sel">ES</button>
   </div>
   <div class="sessionbar">
     <span class="sidlabel" hidden><span data-i18n="sessionLabel">Session</span>: <b id="sidValue"></b></span>
     <span class="sessionbtns">
-      <a id="manualLink" class="manual" href="manual.html?lang=en" target="_blank" rel="noopener" data-i18n="manual">User manual</a>
+      <a id="manualLink" class="manual" href="manual.html?lang=es" target="_blank" rel="noopener" data-i18n="manual">User manual</a>
       <button type="button" id="copyLink" data-i18n="copyLink">Copy link</button>
       <button type="button" id="newSession" data-i18n="newSession">New session</button>
     </span>
@@ -250,7 +250,7 @@ const SID=resolveSessionId();
 const STORE_KEY='bingo:v4:'+SID;
 
 /* ---------- language ---------- */
-let LANG='en';
+let LANG='es';
 const STR={
   en:{
     title:'Bingo Tracker',
