@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#092A21">
+<title>Bingo Tracker — User manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700&family=Archivo+Black&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --felt:#0E3B2E; --felt-deep:#092A21; --ivory:#F4EEE0; --chalk:#9DBBAE;
+    --brass:#D9A441; --line:#1E5443;
+    --b:#2E6FD9; --i:#C8402F; --n:#E8E2D4; --g:#2F9E5E; --o:#E0A21C;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:var(--felt-deep);color:var(--ivory);
+    font-family:Archivo,system-ui,-apple-system,sans-serif;font-weight:500}
+  body{padding:env(safe-area-inset-top) 14px calc(env(safe-area-inset-bottom) + 40px)}
+  .wrap{max-width:620px;margin:0 auto}
+
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0 0}
+  .back{font:700 13px Archivo,sans-serif;color:var(--chalk);text-decoration:none;
+    border:2px solid var(--line);border-radius:10px;padding:6px 12px;display:inline-block}
+  .back:hover,.back:focus-visible{color:var(--ivory);border-color:var(--brass)}
+  .langbar{display:flex;gap:6px}
+  .langbar button{font:700 13px Archivo,sans-serif;padding:6px 14px;background:transparent;
+    color:var(--chalk);border:2px solid var(--line);border-radius:10px}
+  .langbar button.sel{background:var(--brass);color:#231704;border-color:transparent}
+
+  header{padding:22px 0 10px}
+  .lettertitle{display:flex;gap:6px;margin-bottom:14px}
+  .lettertitle span{width:46px;height:46px;flex:0 0 46px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font:400 21px 'Archivo Black',Archivo,sans-serif;color:#10231C;
+    background:radial-gradient(circle at 34% 28%, #fff 0%, var(--n) 42%, #c9c2b2 100%);
+    box-shadow:0 6px 16px rgba(0,0,0,.4)}
+  h1{font:400 30px/1.15 'Archivo Black',Archivo,sans-serif;margin:0 0 8px}
+  .lede{color:var(--chalk);font-size:16px;line-height:1.6;margin:0}
+
+  .toc{background:var(--felt);border-radius:16px;padding:14px 16px;margin:22px 0 6px}
+  .toc ol{margin:0;padding-left:20px;line-height:1.9;font-size:15px}
+  .toc a{color:var(--ivory);text-decoration:none;border-bottom:1px solid var(--line)}
+  .toc a:hover,.toc a:focus-visible{border-color:var(--brass)}
+
+  section{border-top:1px solid var(--line);padding:24px 0 4px}
+  h2{font:400 21px/1.2 'Archivo Black',Archivo,sans-serif;margin:0 0 12px;
+    display:flex;align-items:center;gap:10px}
+  h2::before{content:attr(data-l);width:30px;height:30px;flex:0 0 30px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:15px;color:#10231C;background:var(--n)}
+  section.B h2::before{background:var(--b);color:#fff}
+  section.I h2::before{background:var(--i);color:#fff}
+  section.G h2::before{background:var(--g);color:#fff}
+  section.O h2::before{background:var(--o)}
+  section.X h2::before{background:var(--brass)}
+  h3{font:700 15px Archivo,sans-serif;color:var(--brass);margin:20px 0 6px}
+  p,li{font-size:15px;line-height:1.65}
+  p{margin:0 0 12px}
+  ul{margin:0 0 12px;padding-left:20px}
+  li{margin-bottom:7px}
+  b{color:var(--ivory)}
+  .ui{font:700 14px Archivo,sans-serif;background:var(--felt);border:1px solid var(--line);
+    border-radius:7px;padding:1px 7px;color:var(--ivory);white-space:nowrap}
+  table{width:100%;border-collapse:collapse;margin:0 0 14px;font-size:14px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:#6f8d80;font:700 13px Archivo,sans-serif}
+  td:first-child{color:var(--brass);font-weight:700;white-space:nowrap}
+  .note{background:var(--felt);border-left:4px solid var(--brass);border-radius:0 12px 12px 0;
+    padding:12px 14px;margin:0 0 14px}
+  .note p:last-child{margin:0}
+  footer{border-top:1px solid var(--line);margin-top:28px;padding-top:16px;
+    color:#6f8d80;font-size:13px;line-height:1.6}
+  [hidden]{display:none!important}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="back" href="./" id="backLink">← Bingo Tracker</a>
+    <div class="langbar">
+      <button type="button" data-lang="en" class="sel">EN</button>
+      <button type="button" data-lang="es">ES</button>
+    </div>
+  </div>
+
+  <!-- ============================= ENGLISH ============================= -->
+  <div id="doc-en">
+    <header>
+      <div class="lettertitle"><span>B</span><span>I</span><span>N</span><span>G</span><span>O</span></div>
+      <h1>User manual</h1>
+      <p class="lede">Bingo Tracker follows a 75-ball game for you: it keeps the called numbers, watches your own cards, and tells you the moment one of them completes a pattern you care about. Nothing to install, no account, no password.</p>
+    </header>
+
+    <div class="toc">
+      <ol>
+        <li><a href="#en-start">Getting started in 60 seconds</a></li>
+        <li><a href="#en-call">Calling numbers</a></li>
+        <li><a href="#en-cards">My cards</a></li>
+        <li><a href="#en-goals">Goals</a></li>
+        <li><a href="#en-session">Sessions and saved data</a></li>
+        <li><a href="#en-faq">Language and common questions</a></li>
+      </ol>
+    </div>
+
+    <section class="B" id="en-start">
+      <h2 data-l="1">Getting started in 60 seconds</h2>
+      <ul>
+        <li>Open the app. Type your first card's numbers into the <b>My cards</b> grid — column by column, the centre is free.</li>
+        <li>Go to <b>Goals</b> and save the pattern the game is playing for, for example <span class="ui">Four corners</span>.</li>
+        <li>As the caller shouts numbers, type each one in the box at the top and press <span class="ui">Call</span>.</li>
+        <li>Your card squares light up on their own. A banner appears the moment a card completes a saved pattern.</li>
+      </ul>
+      <div class="note">
+        <p>Everything is stored in this browser only. Closing the tab is safe; reopening the same link brings the game back exactly as you left it.</p>
+      </div>
+    </section>
+
+    <section class="I" id="en-call">
+      <h2 data-l="2">Calling numbers</h2>
+      <p>The top of the screen is the caller. The large ball shows the last number with its letter, and beside it you see how many numbers have been called, how many are left, and which number came before the last one.</p>
+      <h3>Marking a number</h3>
+      <ul>
+        <li>Type the number in the box and press <span class="ui">Call</span> or the Enter key.</li>
+        <li>Or open the <b>All 75</b> tab and tap the number on the board. Tapping it again unmarks it.</li>
+        <li>Only 1 to 75 is accepted. A number already called is refused, and the box tells you so.</li>
+      </ul>
+      <h3>Fixing mistakes</h3>
+      <ul>
+        <li><span class="ui">Undo last</span> removes the most recent call. Press it repeatedly to walk backwards.</li>
+        <li>To remove a number from the middle of the game, tap it on the <b>All 75</b> board.</li>
+        <li><span class="ui">Start new game</span> clears every called number after asking you to confirm. Your cards and goals stay exactly as they are.</li>
+      </ul>
+      <p>The <b>All 75</b> tab also keeps the full call history in order, which is useful when someone disputes a win.</p>
+    </section>
+
+    <section class="N" id="en-cards">
+      <h2 data-l="3">My cards</h2>
+      <p>Cards are the ones in your hand. Type their numbers once and the app marks them for you for the rest of the game.</p>
+      <h3>Filling a card</h3>
+      <ul>
+        <li>Tap a square and type the number. After two digits the cursor jumps to the next square, so you can fill a card without lifting your finger.</li>
+        <li>Each column only accepts its own range: B 1–15, I 16–30, N 31–45, G 46–60, O 61–75. A number outside the range is rejected and the square briefly shows the range it needs.</li>
+        <li>The same number twice on one card is also rejected — the square says so.</li>
+        <li>The centre square is free and is always counted as marked.</li>
+      </ul>
+      <h3>Adding and removing</h3>
+      <ul>
+        <li><span class="ui">+ Add card</span> adds another card. There is no limit.</li>
+        <li><span class="ui">Clear</span> empties one card's numbers but keeps the card.</li>
+        <li><span class="ui">Remove card</span> deletes it. At least one card always stays.</li>
+      </ul>
+      <h3>What the label next to each card means</h3>
+      <table>
+        <tr><th>Label</th><th>Meaning</th></tr>
+        <tr><td>7/24 entered</td><td>The card is not finished yet — 7 of its 24 numbers are typed in.</td></tr>
+        <tr><td>3 of 5 on the best line</td><td>The card is complete and its strongest line has 3 marks.</td></tr>
+        <tr><td>1 away</td><td>Some line needs a single number. Watch this card.</td></tr>
+        <tr><td>BINGO!</td><td>A full line — row, column or diagonal. The winning line is outlined on the card.</td></tr>
+        <tr><td>BINGO ×2</td><td>Two lines complete at once.</td></tr>
+      </table>
+    </section>
+
+    <section class="G" id="en-goals">
+      <h2 data-l="4">Goals</h2>
+      <p>A goal is the pattern the house is paying for. Bingo Tracker does not assume it is a straight line — you draw it yourself, and it watches every card for it.</p>
+      <h3>Creating one</h3>
+      <ul>
+        <li>Open the <b>Goals</b> tab and tap squares on the blank card to draw the pattern.</li>
+        <li>Or start from a preset: <span class="ui">Four corners</span>, <span class="ui">Letter X</span> or <span class="ui">Blackout</span>. You can adjust a preset after applying it.</li>
+        <li>Give the goal a name if you want — otherwise it is named Goal 1, Goal 2, and so on.</li>
+        <li>Press <span class="ui">Save goal</span>. The blank card clears, ready for the next pattern.</li>
+      </ul>
+      <p>Save as many goals as the game needs; they are all watched at the same time. <span class="ui">Remove</span> deletes one from the list.</p>
+      <h3>Winning alerts</h3>
+      <p>When any card covers every square of a saved pattern, a banner appears at the top of the screen naming the card and the goal. Each card announces each goal once per game, so correcting a mistyped number will not set off the same alert again. <span class="ui">Start new game</span> arms every alert again.</p>
+      <div class="note">
+        <p>Goals are checked on the card as you have typed it. If a card is only half entered, the app can only see the numbers you gave it.</p>
+      </div>
+    </section>
+
+    <section class="O" id="en-session">
+      <h2 data-l="5">Sessions and saved data</h2>
+      <p>There is no login. Instead, each browser tab gets its own session, identified by the <b>s=</b> value in the address bar. Called numbers, cards, goals and language are stored in that browser under that session.</p>
+      <ul>
+        <li><span class="ui">Copy link</span> copies the address of the current session. Save it — a bookmark, a note to yourself, a message — and opening it later returns you to the same game.</li>
+        <li><span class="ui">New session</span> starts an empty game in this tab. The old session is not deleted; its link still works.</li>
+        <li>Several people can use the same public address at the same time. Each tab and each device keeps its own private session — data never mixes.</li>
+      </ul>
+      <div class="note">
+        <p>Sessions live in the browser, not on a server. Clearing your browsing data, using private browsing, or opening the link on another device gives you a different, empty session. If the game matters, copy the link before you close the tab.</p>
+      </div>
+    </section>
+
+    <section class="X" id="en-faq">
+      <h2 data-l="6">Language and common questions</h2>
+      <p>The <span class="ui">EN</span> / <span class="ui">ES</span> buttons switch every label, hint and message between English and Spanish, and the choice is saved with your session. This manual follows the language you picked in the app.</p>
+      <h3>Does the app call the numbers for me?</h3>
+      <p>No. It tracks a game that someone else is calling — a hall, a stream, a friend with a cage. You enter what you hear.</p>
+      <h3>Can I use it without internet?</h3>
+      <p>Once the page has loaded it runs entirely in your browser. A dropped connection mid-game does not lose anything.</p>
+      <h3>My numbers disappeared.</h3>
+      <p>Almost always the session changed: a different tab, a different device, private browsing, or cleared browsing data. Reopen the exact link you copied with <span class="ui">Copy link</span>.</p>
+      <h3>A square will not accept my number.</h3>
+      <p>Either it is outside that column's range or it is already on that card. The square shows which of the two it is for a moment before clearing.</p>
+    </section>
+
+    <footer>
+      <p>Bingo Tracker — a single static page. No account, no server-side database, no tracking of your game.</p>
+    </footer>
+  </div>
+
+  <!-- ============================= ESPAÑOL ============================= -->
+  <div id="doc-es" hidden>
+    <header>
+      <div class="lettertitle"><span>B</span><span>I</span><span>N</span><span>G</span><span>O</span></div>
+      <h1>Manual de usuario</h1>
+      <p class="lede">Registro de Bingo sigue por ti una partida de 75 bolas: guarda los números cantados, vigila tus cartones y te avisa en cuanto uno completa el patrón que te interesa. No hay que instalar nada, ni cuenta, ni contraseña.</p>
+    </header>
+
+    <div class="toc">
+      <ol>
+        <li><a href="#es-start">Empezar en 60 segundos</a></li>
+        <li><a href="#es-call">Cantar números</a></li>
+        <li><a href="#es-cards">Mis cartones</a></li>
+        <li><a href="#es-goals">Objetivos</a></li>
+        <li><a href="#es-session">Sesiones y datos guardados</a></li>
+        <li><a href="#es-faq">Idioma y dudas frecuentes</a></li>
+      </ol>
+    </div>
+
+    <section class="B" id="es-start">
+      <h2 data-l="1">Empezar en 60 segundos</h2>
+      <ul>
+        <li>Abre la aplicación. Escribe los números de tu primer cartón en la cuadrícula de <b>Mis cartones</b>, columna por columna; el centro es libre.</li>
+        <li>Ve a <b>Objetivos</b> y guarda el patrón con el que se juega, por ejemplo <span class="ui">Cuatro esquinas</span>.</li>
+        <li>Cuando canten un número, escríbelo arriba y pulsa <span class="ui">Cantar</span>.</li>
+        <li>Las casillas de tus cartones se marcan solas. Aparece un aviso en cuanto un cartón completa un patrón guardado.</li>
+      </ul>
+      <div class="note">
+        <p>Todo se guarda solo en este navegador. Puedes cerrar la pestaña sin miedo: al abrir el mismo enlace la partida vuelve tal como la dejaste.</p>
+      </div>
+    </section>
+
+    <section class="I" id="es-call">
+      <h2 data-l="2">Cantar números</h2>
+      <p>La parte de arriba es el cantador. La bola grande muestra el último número con su letra y, al lado, cuántos números se han cantado, cuántos quedan y cuál salió antes del último.</p>
+      <h3>Marcar un número</h3>
+      <ul>
+        <li>Escribe el número en la casilla y pulsa <span class="ui">Cantar</span> o la tecla Enter.</li>
+        <li>O abre la pestaña <b>Los 75</b> y toca el número en el tablero. Si lo tocas otra vez, se desmarca.</li>
+        <li>Solo se aceptan números del 1 al 75. Un número ya cantado se rechaza y la casilla te lo indica.</li>
+      </ul>
+      <h3>Corregir errores</h3>
+      <ul>
+        <li><span class="ui">Deshacer último</span> quita el número más reciente. Púlsalo varias veces para ir hacia atrás.</li>
+        <li>Para quitar un número del medio de la partida, tócalo en el tablero <b>Los 75</b>.</li>
+        <li><span class="ui">Empezar partida nueva</span> borra todos los números cantados, después de pedirte confirmación. Tus cartones y tus objetivos se mantienen igual.</li>
+      </ul>
+      <p>La pestaña <b>Los 75</b> guarda además el historial completo en orden, muy útil cuando alguien discute un premio.</p>
+    </section>
+
+    <section class="N" id="es-cards">
+      <h2 data-l="3">Mis cartones</h2>
+      <p>Los cartones son los que tienes en la mano. Escribe sus números una vez y la aplicación los marca por ti durante toda la partida.</p>
+      <h3>Llenar un cartón</h3>
+      <ul>
+        <li>Toca una casilla y escribe el número. Al segundo dígito el cursor salta a la casilla siguiente, así llenas el cartón de corrido.</li>
+        <li>Cada columna solo acepta su propio rango: B 1–15, I 16–30, N 31–45, G 46–60, O 61–75. Un número fuera de rango se rechaza y la casilla muestra un momento el rango que necesita.</li>
+        <li>El mismo número dos veces en un cartón también se rechaza, y la casilla lo indica.</li>
+        <li>La casilla del centro es libre y cuenta siempre como marcada.</li>
+      </ul>
+      <h3>Añadir y quitar</h3>
+      <ul>
+        <li><span class="ui">+ Añadir cartón</span> agrega otro cartón. No hay límite.</li>
+        <li><span class="ui">Borrar</span> vacía los números de un cartón pero lo conserva.</li>
+        <li><span class="ui">Quitar cartón</span> lo elimina. Siempre queda al menos uno.</li>
+      </ul>
+      <h3>Qué significa la etiqueta de cada cartón</h3>
+      <table>
+        <tr><th>Etiqueta</th><th>Significado</th></tr>
+        <tr><td>7/24 introducidos</td><td>El cartón aún no está completo: has escrito 7 de sus 24 números.</td></tr>
+        <tr><td>3 de 5 en la mejor línea</td><td>El cartón está completo y su línea más avanzada tiene 3 marcas.</td></tr>
+        <tr><td>A 1 de completar</td><td>A alguna línea le falta un solo número. Atento a ese cartón.</td></tr>
+        <tr><td>¡BINGO!</td><td>Línea completa: fila, columna o diagonal. La línea ganadora queda resaltada en el cartón.</td></tr>
+        <tr><td>¡BINGO ×2!</td><td>Dos líneas completas a la vez.</td></tr>
+      </table>
+    </section>
+
+    <section class="G" id="es-goals">
+      <h2 data-l="4">Objetivos</h2>
+      <p>Un objetivo es el patrón que se premia en la partida. La aplicación no da por hecho que sea una línea recta: tú lo dibujas y ella lo vigila en todos tus cartones.</p>
+      <h3>Crear uno</h3>
+      <ul>
+        <li>Abre la pestaña <b>Objetivos</b> y toca casillas en el cartón en blanco para dibujar el patrón.</li>
+        <li>O parte de un preajuste: <span class="ui">Cuatro esquinas</span>, <span class="ui">Letra X</span> o <span class="ui">Cartón lleno</span>. Puedes retocarlo después de aplicarlo.</li>
+        <li>Ponle nombre si quieres; si no, se llamará Objetivo 1, Objetivo 2, etc.</li>
+        <li>Pulsa <span class="ui">Guardar objetivo</span>. El cartón en blanco se limpia, listo para el siguiente patrón.</li>
+      </ul>
+      <p>Guarda tantos objetivos como necesite la partida: se vigilan todos a la vez. <span class="ui">Quitar</span> borra uno de la lista.</p>
+      <h3>Avisos de premio</h3>
+      <p>Cuando un cartón cubre todas las casillas de un patrón guardado, aparece arriba un aviso con el número del cartón y el nombre del objetivo. Cada cartón anuncia cada objetivo una sola vez por partida, así que corregir un número mal escrito no vuelve a disparar el mismo aviso. <span class="ui">Empezar partida nueva</span> reactiva todos los avisos.</p>
+      <div class="note">
+        <p>Los objetivos se comprueban sobre el cartón tal como lo escribiste. Si solo introdujiste la mitad, la aplicación únicamente puede ver esos números.</p>
+      </div>
+    </section>
+
+    <section class="O" id="es-session">
+      <h2 data-l="5">Sesiones y datos guardados</h2>
+      <p>No hay inicio de sesión. En su lugar, cada pestaña del navegador tiene su propia sesión, identificada por el valor <b>s=</b> de la dirección. Los números cantados, los cartones, los objetivos y el idioma se guardan en ese navegador bajo esa sesión.</p>
+      <ul>
+        <li><span class="ui">Copiar enlace</span> copia la dirección de la sesión actual. Guárdala —un marcador, una nota, un mensaje— y al abrirla después vuelves a la misma partida.</li>
+        <li><span class="ui">Nueva sesión</span> empieza una partida vacía en esta pestaña. La sesión anterior no se borra: su enlace sigue funcionando.</li>
+        <li>Varias personas pueden usar la misma dirección pública a la vez. Cada pestaña y cada dispositivo mantiene su sesión privada; los datos no se mezclan.</li>
+      </ul>
+      <div class="note">
+        <p>Las sesiones viven en el navegador, no en un servidor. Si borras los datos de navegación, usas modo privado o abres el enlace en otro dispositivo, tendrás una sesión distinta y vacía. Si la partida te importa, copia el enlace antes de cerrar la pestaña.</p>
+      </div>
+    </section>
+
+    <section class="X" id="es-faq">
+      <h2 data-l="6">Idioma y dudas frecuentes</h2>
+      <p>Los botones <span class="ui">EN</span> / <span class="ui">ES</span> cambian todas las etiquetas, ayudas y mensajes entre inglés y español, y la elección se guarda con tu sesión. Este manual se abre en el idioma que hayas elegido en la aplicación.</p>
+      <h3>¿La aplicación canta los números por mí?</h3>
+      <p>No. Lleva el registro de una partida que canta otra persona: un salón, una transmisión, un amigo con el bombo. Tú escribes lo que oyes.</p>
+      <h3>¿Funciona sin internet?</h3>
+      <p>Una vez cargada la página, todo ocurre en tu navegador. Si se cae la conexión a media partida no se pierde nada.</p>
+      <h3>Desaparecieron mis números.</h3>
+      <p>Casi siempre es que cambió la sesión: otra pestaña, otro dispositivo, modo privado o datos de navegación borrados. Vuelve a abrir el enlace exacto que copiaste con <span class="ui">Copiar enlace</span>.</p>
+      <h3>Una casilla no acepta mi número.</h3>
+      <p>O está fuera del rango de esa columna, o ya está en ese cartón. La casilla te indica cuál de las dos cosas es antes de vaciarse.</p>
+    </section>
+
+    <footer>
+      <p>Registro de Bingo — una sola página estática. Sin cuenta, sin base de datos en el servidor y sin seguimiento de tu partida.</p>
+    </footer>
+  </div>
+</div>
+
+<script>
+(function(){
+  var STR={
+    en:{title:'Bingo Tracker — User manual', back:'← Bingo Tracker'},
+    es:{title:'Registro de Bingo — Manual de usuario', back:'← Registro de Bingo'}
+  };
+  function setLang(l){
+    if(!STR[l]) l='en';
+    document.documentElement.lang=l;
+    document.title=STR[l].title;
+    document.getElementById('backLink').textContent=STR[l].back;
+    document.getElementById('doc-en').hidden=(l!=='en');
+    document.getElementById('doc-es').hidden=(l!=='es');
+    Array.prototype.forEach.call(document.querySelectorAll('.langbar button'),function(b){
+      b.classList.toggle('sel',b.dataset.lang===l);
+    });
+    try{
+      var url=new URL(location.href);
+      if(url.searchParams.get('lang')!==l){ url.searchParams.set('lang',l); history.replaceState(null,'',url); }
+    }catch(e){}
+  }
+  var initial='en';
+  try{ initial=(new URL(location.href)).searchParams.get('lang')||'en'; }catch(e){}
+  setLang(initial);
+  Array.prototype.forEach.call(document.querySelectorAll('.langbar button'),function(b){
+    b.onclick=function(){ setLang(b.dataset.lang); };
+  });
+  // keep the "back" link pointing at the session the manual was opened from
+  try{
+    var s=(new URL(location.href)).searchParams.get('s');
+    if(s&&/^[a-zA-Z0-9]{4,32}$/.test(s)) document.getElementById('backLink').href='./?s='+encodeURIComponent(s);
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
