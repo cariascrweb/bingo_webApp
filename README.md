@@ -20,6 +20,10 @@ moment one is completed — all in English or Spanish.
   completes one.
 - **English / Spanish** — a language switch translates every label, hint and
   message.
+- **Built-in user manual** — a **User manual / Manual de usuario** link in the
+  top bar opens `manual.html` in a new tab, already in the language currently
+  selected in the app (and carrying the session id, so the manual's back link
+  returns to the same game).
 - **No login, per-session storage** — each browser tab gets its own session
   id (carried in the URL as `?s=...`). All data (called numbers, cards,
   goals, language) is saved in that browser's `localStorage` under the
@@ -43,6 +47,9 @@ python -m http.server 8080
 ```
 
 then browse to `http://localhost:8080/bingo.html`.
+
+Keep `manual.html` next to `bingo.html` — the manual link is a relative link
+to `manual.html` in the same folder.
 
 ## Publishing / self-hosting
 
@@ -106,6 +113,8 @@ Notes:
 ## Project files
 
 - `bingo.html` — the entire application (markup, styles and script).
+- `manual.html` — the bilingual user manual (EN/ES in one static page,
+  language chosen via `?lang=en|es`, with its own EN/ES switch).
 - `README.md` — this file.
 
 Editor/IDE folders (e.g. `.vscode/`, `.vs/`) are local tooling metadata and

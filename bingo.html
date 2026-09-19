@@ -133,9 +133,12 @@
   .sessionbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px;
     margin-top:8px;font-size:12px;color:var(--chalk)}
   .sessionbar b{color:var(--ivory);font-family:'Archivo Black',Archivo,sans-serif;letter-spacing:.03em}
-  .sessionbtns{display:flex;gap:6px}
+  .sessionbtns{display:flex;gap:6px;align-items:center}
   .sessionbtns button{padding:6px 12px;font-size:12px;background:transparent;color:var(--chalk);
     border:2px solid var(--line);border-radius:10px}
+  .sessionbtns a.manual{padding:6px 12px;font:700 12px Archivo,sans-serif;color:var(--brass);
+    border:2px solid var(--line);border-radius:10px;text-decoration:none;display:inline-block}
+  .sessionbtns a.manual:hover,.sessionbtns a.manual:focus-visible{border-color:var(--brass)}
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -148,6 +151,7 @@
   <div class="sessionbar">
     <span class="sidlabel" hidden><span data-i18n="sessionLabel">Session</span>: <b id="sidValue"></b></span>
     <span class="sessionbtns">
+      <a id="manualLink" class="manual" href="manual.html?lang=en" target="_blank" rel="noopener" data-i18n="manual">User manual</a>
       <button type="button" id="copyLink" data-i18n="copyLink">Copy link</button>
       <button type="button" id="newSession" data-i18n="newSession">New session</button>
     </span>
@@ -298,6 +302,8 @@ const STR={
     sessionLabel:'Session',
     copyLink:'Copy link',
     newSession:'New session',
+    manual:'User manual',
+    manualTitle:'Open the user manual in a new tab',
     linkCopied:'Session link copied!',
     copyLinkPrompt:'Copy this link to come back to this session:',
     confirmNewSession:'Start a brand-new empty session in this tab? (Your current session stays saved if you keep its link.)'
@@ -342,6 +348,8 @@ const STR={
     sessionLabel:'Sesión',
     copyLink:'Copiar enlace',
     newSession:'Nueva sesión',
+    manual:'Manual de usuario',
+    manualTitle:'Abrir el manual de usuario en una pestaña nueva',
     linkCopied:'¡Enlace de la sesión copiado!',
     copyLinkPrompt:'Copia este enlace para volver a esta sesión:',
     confirmNewSession:'¿Empezar una sesión nueva y vacía en esta pestaña? (Tu sesión actual se conserva si guardas su enlace.)'
@@ -356,6 +364,14 @@ function applyStaticI18n(){
   document.title=t('title');
   document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent=t(el.dataset.i18n); });
   document.querySelectorAll('[data-i18n-ph]').forEach(el=>{ el.placeholder=t(el.dataset.i18nPh); });
+  updateManualLink();
+}
+/* the manual opens in a new tab, in the language currently selected here */
+function updateManualLink(){
+  const a=$('manualLink'); if(!a) return;
+  a.href='manual.html?lang='+encodeURIComponent(LANG)+'&s='+encodeURIComponent(SID);
+  a.title=t('manualTitle');
+  a.setAttribute('aria-label',t('manualTitle'));
 }
 function setLang(l){
   if(!STR[l]) return;
@@ -490,7 +506,7 @@ cardsBox.addEventListener('click',e=>{
   const removeIdx=e.target.dataset&&e.target.dataset.remove;
   if(clearIdx!==undefined&&clearIdx!==null){
     if(confirm(t('confirmClearCard',+clearIdx+1))){
-      cards[+clearIdx]=Array(25).fill(''); buildCards(); renderCards(); save();
+      cards[+clearIdx]=Array(25).fill(''); achieved={}; buildCards(); renderCards(); save();
     }
     return;
   }
@@ -554,11 +570,10 @@ function checkGoals(ci,marked){
   goalsList.forEach(goal=>{
     const key=ci+':'+goal.id;
     const done=goal.cells.every((need,i)=>!need||marked[i]);
+    // alert once per card + goal per game; undoing a call does not re-arm it
     if(done&&!achieved[key]){
       achieved[key]=true;
       toast(t('goalCompleted',ci+1,goal.name));
-    }else if(!done&&achieved[key]){
-      achieved[key]=false;
     }
   });
 }
@@ -670,7 +685,7 @@ $('in').addEventListener('input',e=>{ e.target.value=e.target.value.replace(/\D/
 $('undo').onclick=()=>{ called.pop(); render(false); };
 $('reset').onclick=()=>{
   if(!called.length||confirm(t('confirmClearAll',called.length))){
-    called=[]; render(false);
+    called=[]; achieved={}; render(false);
   }
 };
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
@@ -700,6 +715,7 @@ $('newSession').onclick=()=>{
 buildCards();
 buildDummy();
 renderGoalsList();
+updateManualLink();
 load().then(()=>{
   document.documentElement.lang=LANG;
   document.querySelectorAll('.langbar button').forEach(b=>b.classList.toggle('sel',b.dataset.lang===LANG));
