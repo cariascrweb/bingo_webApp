@@ -5,7 +5,110 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#092A21">
-<title>Bingo Tracker</title>
+
+<title>Marcador de Bingo online — sigue tus cartones y los números cantados</title>
+<meta name="description" content="Marcador de bingo gratis en el navegador: anota los números cantados, marca tus cartones solo y te avisa cuando completas un patrón. Bingo de 75 bolas, sin instalar nada ni registrarte.">
+<link rel="canonical" href="https://bingo.ariasblanco.com/">
+<link rel="alternate" hreflang="es" href="https://bingo.ariasblanco.com/">
+<link rel="alternate" hreflang="en" href="https://bingo.ariasblanco.com/">
+<link rel="alternate" hreflang="x-default" href="https://bingo.ariasblanco.com/">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Marcador de Bingo">
+<meta property="og:locale" content="es_ES">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:url" content="https://bingo.ariasblanco.com/">
+<meta property="og:title" content="Marcador de Bingo online — sigue tus cartones y los números cantados">
+<meta property="og:description" content="Anota los números cantados y tus cartones se marcan solos. Bingo de 75 bolas, gratis, sin instalar nada.">
+<meta property="og:image" content="https://bingo.ariasblanco.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Marcador de Bingo — bola de bingo sobre tapete verde">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Marcador de Bingo online">
+<meta name="twitter:description" content="Anota los números cantados y tus cartones se marcan solos. Gratis, sin instalar nada.">
+<meta name="twitter:image" content="https://bingo.ariasblanco.com/og.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://bingo.ariasblanco.com/#app",
+      "name": "Marcador de Bingo",
+      "alternateName": "Bingo Tracker",
+      "url": "https://bingo.ariasblanco.com/",
+      "applicationCategory": "GameApplication",
+      "operatingSystem": "Any (navegador web)",
+      "browserRequirements": "Requiere JavaScript",
+      "inLanguage": ["es", "en"],
+      "description": "Marcador de bingo de 75 bolas en el navegador: registra los números cantados, marca automáticamente tus cartones y avisa cuando se completa un patrón guardado.",
+      "featureList": [
+        "Registro de números cantados con deshacer",
+        "Varios cartones a la vez, marcados automáticamente",
+        "Patrones ganadores personalizados (cuatro esquinas, X, cartón lleno)",
+        "Sesión guardada en el navegador y recuperable por enlace",
+        "Español e inglés"
+      ],
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "isAccessibleForFree": true,
+      "author": { "@id": "https://bingo.ariasblanco.com/#author" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://bingo.ariasblanco.com/#author",
+      "name": "Carlos Arias",
+      "url": "https://github.com/cariascrweb"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://bingo.ariasblanco.com/#website",
+      "url": "https://bingo.ariasblanco.com/",
+      "name": "Marcador de Bingo",
+      "inLanguage": "es",
+      "publisher": { "@id": "https://bingo.ariasblanco.com/#author" }
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "es",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Se pierde la partida si cierro la pestaña?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. La partida se guarda en tu propio navegador y vuelve tal cual al reabrir el mismo enlace. Con «Copiar enlace» puedes pasártelo a otro dispositivo o guardarlo para más tarde." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuántos cartones puedo llevar a la vez?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Los que quieras. Cada cartón se sigue por separado y todos se marcan a la vez con cada número cantado." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Sirve para bingo de 90 bolas?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Por ahora no: está hecho para el bingo americano de 75 bolas con cartón de 5×5 y espacio libre en el centro." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Hay que pagar o registrarse?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Ni una cosa ni la otra. No hay cuenta, no hay anuncios y los datos no salen de tu navegador: no se envía nada a ningún servidor." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Funciona sin internet?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Una vez cargada la página, la partida sigue funcionando aunque se caiga la conexión, porque todo el cálculo se hace en tu dispositivo." }
+    }
+  ]
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700&family=Archivo+Black&display=swap" rel="stylesheet">
@@ -125,6 +228,20 @@
   .cell.dummy{cursor:pointer;background:var(--felt-deep);border:2px solid var(--line)}
   .cell.dummy.on{background:var(--brass);border-color:transparent}
 
+  h1.pagetitle{font:700 15px Archivo,sans-serif;color:var(--chalk);margin:10px 0 0;
+    letter-spacing:.01em;line-height:1.4}
+  h1.pagetitle b{color:var(--ivory)}
+
+  .seo{margin:34px 0 0;border-top:2px solid var(--line);padding-top:22px;
+    font-size:15px;line-height:1.65;color:var(--chalk)}
+  .seo h2{font:700 19px 'Archivo Black',Archivo,sans-serif;color:var(--ivory);margin:24px 0 8px}
+  .seo h3{font:700 16px Archivo,sans-serif;color:var(--ivory);margin:18px 0 4px}
+  .seo p{margin:0 0 12px}
+  .seo ul{margin:0 0 12px;padding-left:20px}
+  .seo li{margin:0 0 6px}
+  .seo a{color:var(--brass)}
+  .seo .foot{margin-top:22px;font-size:13px;opacity:.75}
+
   .langbar{display:flex;justify-content:flex-end;gap:6px;margin:8px 0 0}
   .langbar button{padding:6px 14px;font-size:13px;background:transparent;color:var(--chalk);
     border:2px solid var(--line);border-radius:10px}
@@ -149,50 +266,53 @@
     <button type="button" data-lang="es" class="sel">ES</button>
   </div>
   <div class="sessionbar">
-    <span class="sidlabel" hidden><span data-i18n="sessionLabel">Session</span>: <b id="sidValue"></b></span>
+    <span class="sidlabel" hidden><span data-i18n="sessionLabel">Sesión</span>: <b id="sidValue"></b></span>
     <span class="sessionbtns">
-      <a id="manualLink" class="manual" href="manual.html?lang=es" target="_blank" rel="noopener" data-i18n="manual">User manual</a>
-      <button type="button" id="copyLink" data-i18n="copyLink">Copy link</button>
-      <button type="button" id="newSession" data-i18n="newSession">New session</button>
+      <a id="manualLink" class="manual" href="manual.html?lang=es" target="_blank" rel="noopener" data-i18n="manual">Manual de usuario</a>
+      <button type="button" id="copyLink" data-i18n="copyLink">Copiar enlace</button>
+      <button type="button" id="newSession" data-i18n="newSession">Nueva sesión</button>
     </span>
   </div>
+  <h1 class="pagetitle" data-lang-block="es"><b>Marcador de bingo online</b> — sigue tus cartones y los números cantados</h1>
+  <h1 class="pagetitle" data-lang-block="en" hidden><b>Online bingo tracker</b> — follow your cards and the numbers called</h1>
+
   <header>
     <div class="ball empty" id="ball"><div class="l" id="ballL"></div><div class="n" id="ballN">–</div></div>
     <div class="meta">
       <b id="count">0</b>
-      <span data-i18n="calledWord">called</span> · <span id="left">75</span> <span data-i18n="leftWord">left</span>
-      <div class="prev" id="prev">Nothing called yet</div>
+      <span data-i18n="calledWord">cantados</span> · <span id="left">75</span> <span data-i18n="leftWord">quedan</span>
+      <div class="prev" id="prev">Todavía no se ha cantado ningún número</div>
     </div>
   </header>
 
   <div class="entry">
-    <input id="in" type="tel" inputmode="numeric" maxlength="2" placeholder="Number called 1–75" data-i18n-ph="callPh" autocomplete="off">
-    <button id="add" data-i18n="call">Call</button>
+    <input id="in" type="tel" inputmode="numeric" maxlength="2" placeholder="Número cantado 1–75" data-i18n-ph="callPh" autocomplete="off">
+    <button id="add" data-i18n="call">Cantar</button>
   </div>
 
   <div class="bar">
-    <button id="undo" disabled data-i18n="undo">Undo last</button>
-    <button id="reset" data-i18n="newGame">Start new game</button>
+    <button id="undo" disabled data-i18n="undo">Deshacer último</button>
+    <button id="reset" data-i18n="newGame">Empezar partida nueva</button>
   </div>
 
   <div class="tabs">
-    <button data-pane="cards" class="sel" data-i18n="tabCards">My cards</button>
-    <button data-pane="goals" data-i18n="tabGoals">Goals</button>
-    <button data-pane="all" data-i18n="tabAll">All 75</button>
+    <button data-pane="cards" class="sel" data-i18n="tabCards">Mis cartones</button>
+    <button data-pane="goals" data-i18n="tabGoals">Objetivos</button>
+    <button data-pane="all" data-i18n="tabAll">Los 75</button>
   </div>
 
   <div class="pane sel" id="pane-cards">
-    <div class="cardsbar"><button id="addCard" type="button" data-i18n="addCard">+ Add card</button></div>
+    <div class="cardsbar"><button id="addCard" type="button" data-i18n="addCard">+ Añadir cartón</button></div>
     <div id="cards"></div>
-    <p class="hint" data-i18n="cardsHint">Tap a square to type your card number. Each column only accepts its own range (B 1–15, I 16–30, N 31–45, G 46–60, O 61–75) — invalid or repeated numbers are rejected. The centre is a free space. Squares fill in on their own as numbers are called.</p>
+    <p class="hint" data-i18n="cardsHint">Toca una casilla para escribir el número de tu cartón. Cada columna solo acepta su propio rango (B 1–15, I 16–30, N 31–45, G 46–60, O 61–75) — los números inválidos o repetidos se rechazan. El centro es un espacio libre. Las casillas se marcan solas a medida que se cantan los números.</p>
   </div>
 
   <div class="pane" id="pane-goals">
-    <p class="hint" data-i18n="goalsHint">Mark cells on the blank card below to define a winning pattern (e.g. the four corners), then save it as a goal. You can save more than one — you'll get an alert the moment any of your cards completes a saved pattern.</p>
+    <p class="hint" data-i18n="goalsHint">Marca casillas en el cartón en blanco de abajo para definir un patrón ganador (por ejemplo, las cuatro esquinas) y guárdalo como objetivo. Puedes guardar más de uno: recibirás un aviso en cuanto alguno de tus cartones complete un patrón guardado.</p>
     <div class="quickgoals">
-      <button id="presetCorners" type="button" data-i18n="presetCorners">Four corners</button>
-      <button id="presetX" type="button" data-i18n="presetX">Letter X</button>
-      <button id="presetBlackout" type="button" data-i18n="presetBlackout">Blackout</button>
+      <button id="presetCorners" type="button" data-i18n="presetCorners">Cuatro esquinas</button>
+      <button id="presetX" type="button" data-i18n="presetX">Letra X</button>
+      <button id="presetBlackout" type="button" data-i18n="presetBlackout">Cartón lleno</button>
     </div>
     <div class="grid" id="dummyGrid"></div>
     <div class="goalsave">
@@ -209,6 +329,58 @@
       <div id="hist">—</div>
     </div>
   </div>
+
+  <section class="seo" data-lang-block="es">
+    <h2>Un marcador de bingo para el jugador, no para el que canta</h2>
+    <p>Casi todas las páginas de bingo generan cartones o cantan las bolas. <b>Este marcador hace lo contrario</b>: tú escribes los números que va cantando el animador y la aplicación se encarga de marcar tus propios cartones, contar cuánto te falta y avisarte en cuanto completas un patrón. Funciona en el navegador del móvil, es gratis y no hay que instalar ni registrar nada.</p>
+
+    <h3>Cómo se usa en tres pasos</h3>
+    <ul>
+      <li><b>Copia tus cartones.</b> En <i>Mis cartones</i> escribes los 24 números de cada cartón de papel. Cada columna acepta solo su rango (B 1–15, I 16–30, N 31–45, G 46–60, O 61–75), así que un número mal tecleado se rechaza en el momento.</li>
+      <li><b>Guarda el patrón.</b> En <i>Objetivos</i> marcas la figura que se juega — cuatro esquinas, letra X, cartón lleno o la que sea — y la guardas.</li>
+      <li><b>Canta.</b> Escribes cada número cantado y pulsas <i>Cantar</i>. Las casillas se marcan solas, ves cuántas te faltan y salta un aviso al completar el patrón.</li>
+    </ul>
+
+    <h3>Preguntas frecuentes</h3>
+    <h3>¿Se pierde la partida si cierro la pestaña?</h3>
+    <p>No. La partida se guarda en tu propio navegador y vuelve tal cual al reabrir el mismo enlace. Con <i>Copiar enlace</i> puedes pasártelo a otro dispositivo o guardarlo para más tarde.</p>
+    <h3>¿Cuántos cartones puedo llevar a la vez?</h3>
+    <p>Los que quieras. Cada cartón se sigue por separado y todos se marcan a la vez con cada número cantado, que es justo lo que se hace difícil a mano cuando llevas cuatro o cinco.</p>
+    <h3>¿Sirve para bingo de 90 bolas?</h3>
+    <p>Por ahora no: está hecho para el bingo americano de 75 bolas con cartón de 5×5 y espacio libre en el centro.</p>
+    <h3>¿Hay que pagar o registrarse?</h3>
+    <p>Ni una cosa ni la otra. No hay cuenta, no hay anuncios y los datos no salen de tu navegador: no se envía nada a ningún servidor.</p>
+    <h3>¿Funciona sin internet?</h3>
+    <p>Una vez cargada la página, la partida sigue funcionando aunque se caiga la conexión, porque todo el cálculo se hace en tu dispositivo.</p>
+
+    <p class="foot">¿Quieres el detalle completo? Lee el <a href="manual.html?lang=es">manual de usuario</a>. El código es abierto y está en <a href="https://github.com/cariascrweb/bingo_webApp" rel="noopener">GitHub</a>.</p>
+  </section>
+
+  <section class="seo" data-lang-block="en" hidden>
+    <h2>A bingo tracker built for the player, not the caller</h2>
+    <p>Almost every bingo site out there generates cards or calls the balls. <b>This one does the opposite</b>: you type the numbers the caller shouts and the app daubs your own cards, counts how close each one is, and tells you the moment a card completes the pattern in play. It runs in a phone browser, it is free, and there is nothing to install and no account to create.</p>
+
+    <h3>How it works, in three steps</h3>
+    <ul>
+      <li><b>Copy your cards in.</b> Under <i>My cards</i>, type the 24 numbers from each paper card. Every column only accepts its own range (B 1–15, I 16–30, N 31–45, G 46–60, O 61–75), so a mistyped number is rejected on the spot.</li>
+      <li><b>Save the pattern.</b> Under <i>Goals</i>, mark the shape being played — four corners, letter X, blackout, anything — and save it.</li>
+      <li><b>Play.</b> Type each called number and press <i>Call</i>. Squares fill in on their own, you can see how many you still need, and a banner appears when a card completes the pattern.</li>
+    </ul>
+
+    <h3>Frequently asked questions</h3>
+    <h3>Do I lose the game if I close the tab?</h3>
+    <p>No. The game is saved in your own browser and comes back exactly as you left it when you reopen the same link. <i>Copy link</i> lets you move it to another device or keep it for later.</p>
+    <h3>How many cards can I track at once?</h3>
+    <p>As many as you like. Each card is tracked separately and all of them are daubed together on every call — which is exactly the part that gets hard by hand once you are holding four or five.</p>
+    <h3>Does it work for 90-ball bingo?</h3>
+    <p>Not yet. It is built for 75-ball American bingo with a 5×5 card and a free centre square.</p>
+    <h3>Is there anything to pay or sign up for?</h3>
+    <p>Neither. No account, no ads, and your data never leaves the browser — nothing is sent to any server.</p>
+    <h3>Does it work offline?</h3>
+    <p>Once the page has loaded, the game keeps working even if the connection drops, because all the work happens on your device.</p>
+
+    <p class="foot">Want the full detail? Read the <a href="manual.html?lang=en">user manual</a>. The code is open source on <a href="https://github.com/cariascrweb/bingo_webApp" rel="noopener">GitHub</a>.</p>
+  </section>
 </div>
 <div class="toasts" id="toasts"></div>
 
@@ -373,12 +545,20 @@ function updateManualLink(){
   a.title=t('manualTitle');
   a.setAttribute('aria-label',t('manualTitle'));
 }
+/* show only the prose block matching the active language (SEO copy at the foot) */
+function applyLangBlocks(l){
+  document.querySelectorAll('[data-lang-block]').forEach(el=>{
+    el.hidden = el.getAttribute('data-lang-block')!==l;
+  });
+}
+
 function setLang(l){
   if(!STR[l]) return;
   LANG=l;
   document.documentElement.lang=l;
   document.querySelectorAll('.langbar button').forEach(b=>b.classList.toggle('sel',b.dataset.lang===l));
   applyStaticI18n();
+  applyLangBlocks(l);
   buildCards(); buildDummy(); renderGoalsList();
   render(false);
   save();
@@ -720,6 +900,7 @@ load().then(()=>{
   document.documentElement.lang=LANG;
   document.querySelectorAll('.langbar button').forEach(b=>b.classList.toggle('sel',b.dataset.lang===LANG));
   applyStaticI18n();
+  applyLangBlocks(LANG);
   buildCards();
   buildDummy();
   renderGoalsList();
