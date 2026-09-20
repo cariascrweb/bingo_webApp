@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Session links (?s=...) are the same page with a saved game in it.
+# Keeping them out of the index avoids thousands of duplicate URLs.
+Disallow: /*?s=
+Disallow: /*&s=
+
+Sitemap: https://bingo.ariasblanco.com/sitemap.xml
